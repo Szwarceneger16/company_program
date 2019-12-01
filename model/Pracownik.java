@@ -15,16 +15,16 @@ public class Pracownik implements Serializable {
     public Pracownik(String pesel, String imie, String nazwisko, BigDecimal wynagrodzenie, String numerTelefonu) {
         try {
             setPesel(pesel);
+            setNumerTelefonu(numerTelefonu);
         }catch (NumberFormatException nfe) {
             throw nfe;
         }
         Imie = imie;
         Nazwisko = nazwisko;
         Wynagrodzenie = wynagrodzenie;
-        NumerTelefonu = numerTelefonu;
     }
 
-    private void setPesel(String in){
+    public void setPesel(String in){
         if(in.length() != 11) {
             throw new NumberFormatException("Wrong Pesel Format");
         }
@@ -36,6 +36,7 @@ public class Pracownik implements Serializable {
         catch (NumberFormatException nfe) {
             throw new NumberFormatException("Wrong Pesel Format");
         }
+        Pesel = in;
     }
 
     public static long getSerialVersionUID() {
@@ -79,6 +80,11 @@ public class Pracownik implements Serializable {
     }
 
     public void setNumerTelefonu(String numerTelefonu) {
+        try{
+            int pom = Integer.parseInt(numerTelefonu);
+        }catch(NumberFormatException nfe) {
+            throw new NumberFormatException("Wrong Telephon Number Format");
+        }
         NumerTelefonu = numerTelefonu;
     }
 }
