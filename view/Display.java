@@ -3,11 +3,14 @@ package szwarc.company_program.view;
 import static szwarc.company_program.controller.Operations.dodajPracownika;
 import static szwarc.company_program.controller.Operations.usunPracownika;
 import static szwarc.company_program.controller.Operations.znajdzPracownika;
+import static szwarc.company_program.controller.Operations.odczytBazyDanych;
+import static szwarc.company_program.controller.Operations.zapisBazyDanych;
 
 import szwarc.company_program.model.Dyrektor;
 import szwarc.company_program.model.Handlowiec;
 import szwarc.company_program.model.Pracownik;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -89,10 +92,37 @@ public class Display {
                     }
                     break;
                 case 4:
+                    System.out.print("[Z] Zapis , [O] Odczyt ");
+                    while(true) {
+                        char select2 = scanner.next().charAt(0);
+                        if(select2 == 'Z' || select2 == 'z'){
+                            System.out.print("Podaj nazwe pliku wraz z roszerzeniem: ");
+                            //String path = new File(".").getCanonicalPath();
+                            String fileName = scanner.next();
+                            try {
+                                if(!zapisBazyDanych(bazaDanych, fileName)) System.out.print("Podano zla nazwe pliku ! ");
+                            }catch (IOException e){
+                                System.out.print("Podano zla nazwe pliku ! ");
+                            }
+                            break;
+                        }else if(select2 == 'o' || select2 == 'O'){
+                            System.out.print("Podaj nazwe pliku wraz z roszerzeniem: ");
+                            String fileName = scanner.next();
+                            try{
+                                HashMap<String, Pracownik> tmp = odczytBazyDanych(fileName);
+                                if(tmp == null) System.out.print("Podano zla nazwe pliku ! ");
+                                else bazaDanych = tmp;
+                            }catch (IOException e){
+                                System.out.print("Podano zla nazwe pliku ! ");
+                            }
+
+                            break;
+                        }
+                    }
 
                     break;
                 default:
-
+                return;
             }
 
         }
