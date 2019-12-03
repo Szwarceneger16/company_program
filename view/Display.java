@@ -21,7 +21,7 @@ public class Display {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
+        int select = 10;
         while (true) {
             System.out.println(" MENU ");
             System.out.println("    1. Lista Pracownikow");
@@ -30,9 +30,19 @@ public class Display {
             System.out.println("    4. Kopia Zapasowa");
 
             //Dyrektor obj = new Dyrektor("99182304053", "abc", "def", new BigDecimal(34343), "3434343", new BigDecimal(34343), "4535345", new BigDecimal(34343));
+            
+                try{
+                    select = scanner.nextInt();
+                }catch (Exception e){
+                    System.err.println("Błąd wprowadzania danych");
+                    scanner.nextLine();
+                    select= 10;
+                }
 
-            int select = scanner.nextInt();
+
             switch (select){
+                case 0:
+                    return;
                 case 1:
                     bazaDanych.forEach((k,v) ->
                             {
@@ -49,22 +59,25 @@ public class Display {
                         char select2 = scanner.next().charAt(0);
                         if (select2 == 'D' || select2 == 'd' || select2 == 'H' || select2 == 'h'){
                             if(select2 == 'D' || select2 == 'd'){
-                                //Dyrektor obj = stworzDyrektora();
-                                obj = new Dyrektor("99112304053", "abc", "def", new BigDecimal(34343), "3434343", new BigDecimal(34343), "4535345", new BigDecimal(34343));
+                                obj = stworzDyrektora();
+                                //obj = new Dyrektor("99112304053", "abc", "def", new BigDecimal(34343), "3434343", new BigDecimal(34343), "4535345", new BigDecimal(34343));
                             }else if(select2 == 'H' || select2 == 'h'){
-                                //Handlowiec obj = stworzHandlowca();
-                                obj = new Handlowiec("99032304053", "abcd", "dddef", new BigDecimal(34343), "3434343", new BigDecimal(34343), new BigDecimal(34343));
+                                obj = stworzHandlowca();
+                                //obj = new Handlowiec("99032304053", "abcd", "dddef", new BigDecimal(34343), "3434343", new BigDecimal(34343), new BigDecimal(34343));
                             }
-                            System.out.println("[E] Potwierdz , [Q] Anuluj");
-                            while(true) {
-                                select2 = scanner.next().charAt(0);
-                                if(select2 == 'E' || select2 == 'e'){
-                                    if(!dodajPracownika(bazaDanych,obj)) System.out.println("Taki pracownik już istnieje!");
-                                    break;
-                                }else if(select2 == 'Q' || select2 == 'q'){
-                                    break;
+                            if(obj != null){
+                                System.out.println("[E] Potwierdz , [Q] Anuluj");
+                                while(true) {
+                                    select2 = scanner.next().charAt(0);
+                                    if(select2 == 'E' || select2 == 'e'){
+                                        if(!dodajPracownika(bazaDanych,obj)) System.out.println("Taki pracownik już istnieje!");
+                                        break;
+                                    }else if(select2 == 'Q' || select2 == 'q'){
+                                        break;
+                                    }
                                 }
                             }
+
                             break;
                         }else{
                             System.out.println("Nie wybrano prawidlowo typu pracownika !");
@@ -119,10 +132,9 @@ public class Display {
                             break;
                         }
                     }
-
                     break;
                 default:
-                return;
+                    break;
             }
 
         }
@@ -132,20 +144,30 @@ public class Display {
     private static Dyrektor stworzDyrektora(){
         while(true)
         {
-            System.out.print("Pesel: "); String pesel = scanner.next();
-            System.out.print("imie: "); String imie = scanner.next();
-            System.out.print("nazwisko: "); String nazwisko = scanner.next();
-            System.out.print("Wyangordzenie: "); BigDecimal wynagrodzenie = scanner.nextBigDecimal();
-            System.out.print("Numer telefonu: "); String nr_tel = scanner.next(); System.out.println();
-            System.out.print("Dodatek Sluzbowy: "); BigDecimal dodatekSluzbowy = scanner.nextBigDecimal();
-            System.out.print("Numer Karty Sluzbowej: "); String karta_sluzb = scanner.next();
-            System.out.print("Limit kosztow/miesiac: "); BigDecimal limitKosztow = scanner.nextBigDecimal();
-
-            try{
+            try {
+                System.out.print("Pesel: ");
+                String pesel = scanner.next();
+                System.out.print("imie: ");
+                String imie = scanner.next();
+                System.out.print("nazwisko: ");
+                String nazwisko = scanner.next();
+                System.out.print("Wyangordzenie: ");
+                BigDecimal wynagrodzenie = scanner.nextBigDecimal();
+                System.out.print("Numer telefonu: ");
+                String nr_tel = scanner.next();
+                System.out.println();
+                System.out.print("Dodatek Sluzbowy: ");
+                BigDecimal dodatekSluzbowy = scanner.nextBigDecimal();
+                System.out.print("Numer Karty Sluzbowej: ");
+                String karta_sluzb = scanner.next();
+                System.out.print("Limit kosztow/miesiac: ");
+                BigDecimal limitKosztow = scanner.nextBigDecimal();
                 Dyrektor dyr = new Dyrektor(pesel,imie,nazwisko,wynagrodzenie,nr_tel,dodatekSluzbowy,karta_sluzb,limitKosztow);
                 return dyr;
-            }catch (NumberFormatException e){
+            }catch (Exception e){
                 System.out.println("Podano zle dane spporboj jeszcze raz !");
+                scanner.nextLine();
+                return null;
             }
         }
     }
@@ -153,46 +175,62 @@ public class Display {
     private static Handlowiec stworzHandlowca(){
         while(true)
         {
-            System.out.print("Pesel: "); String pesel = scanner.next();
-            System.out.print("imie: "); String imie = scanner.next();
-            System.out.print("nazwisko: "); String nazwisko = scanner.next();
-            System.out.print("Wyangordzenie: "); BigDecimal wynagrodzenie = scanner.nextBigDecimal();
-            System.out.print("Numer telefonu: "); String nr_tel = scanner.next();
-            System.out.print("Prowizja %: "); BigDecimal prowizja = scanner.nextBigDecimal();
-            System.out.print("Limit prowizji/miesiac: "); BigDecimal limitProwizji = scanner.nextBigDecimal();
-
-            try{
+            try {
+                System.out.print("Pesel: ");
+                String pesel = scanner.next();
+                System.out.print("imie: ");
+                String imie = scanner.next();
+                System.out.print("nazwisko: ");
+                String nazwisko = scanner.next();
+                System.out.print("Wyangordzenie: ");
+                BigDecimal wynagrodzenie = scanner.nextBigDecimal();
+                System.out.print("Numer telefonu: ");
+                String nr_tel = scanner.next();
+                System.out.print("Prowizja %: ");
+                BigDecimal prowizja = scanner.nextBigDecimal();
+                System.out.print("Limit prowizji/miesiac: ");
+                BigDecimal limitProwizji = scanner.nextBigDecimal();
                 Handlowiec hand = new Handlowiec(pesel,imie,nazwisko,wynagrodzenie,nr_tel,prowizja,limitProwizji);
                 return hand;
-            }catch (NumberFormatException e){
+            }catch (Exception e){
                 System.out.println("Podano zle dane sproboj jeszcze raz !");
+                scanner.nextLine();
+                return null;
             }
         }
     }
 
     private static void wyswietlPracownika(Pracownik in){
         if(in instanceof Dyrektor){
-            Dyrektor obj = (Dyrektor) in;
-            System.out.println("Pesel: " + obj.getPesel());
-            System.out.println("Imie: "+ obj.getImie());
-            System.out.println("Nazwisko: " + obj.getNazwisko());
-            System.out.println("Stanowisko: Dyrektor");
-            System.out.println("Wyangordzenie: " + obj.getWynagrodzenie());
-            System.out.println("Numer telefonu: "+obj.getNumerTelefonu());
-            System.out.println("Dodatek Sluzbowy: "+obj.getDodatekSluzbowy());
-            System.out.println("Numer Karty Sluzbowej: "+obj.getKartaSluzbowa());
-            System.out.println("Limit kosztow/miesiac: "+obj.getLimitKosztow());
+            try {
+                Dyrektor obj = (Dyrektor) in;
+                System.out.println("Pesel: " + obj.getPesel());
+                System.out.println("Imie: " + obj.getImie());
+                System.out.println("Nazwisko: " + obj.getNazwisko());
+                System.out.println("Stanowisko: Dyrektor");
+                System.out.println("Wyangordzenie: " + obj.getWynagrodzenie());
+                System.out.println("Numer telefonu: " + obj.getNumerTelefonu());
+                System.out.println("Dodatek Sluzbowy: " + obj.getDodatekSluzbowy());
+                System.out.println("Numer Karty Sluzbowej: " + obj.getKartaSluzbowa());
+                System.out.println("Limit kosztow/miesiac: " + obj.getLimitKosztow());
+            }catch(Exception e){
+            System.err.println("Błąd odczytu danych");
+        }
             System.out.println("------------------------------------------------");
         }else if(in instanceof Handlowiec){
-            Handlowiec obj = (Handlowiec) in;
-            System.out.println("Pesel: " + obj.getPesel());
-            System.out.println("Imie: "+ obj.getImie());
-            System.out.println("Nazwisko: " + obj.getNazwisko());
-            System.out.println("Stanowisko: Handlowiec");
-            System.out.println("Wyangordzenie: " + obj.getWynagrodzenie());
-            System.out.println("Numer telefonu: "+obj.getNumerTelefonu());
-            System.out.println("Prowizja %: "+obj.getProwizja());
-            System.out.println("Limit prowizji/miesiac: "+obj.getLimitProwizji());
+            try {
+                Handlowiec obj = (Handlowiec) in;
+                System.out.println("Pesel: " + obj.getPesel());
+                System.out.println("Imie: " + obj.getImie());
+                System.out.println("Nazwisko: " + obj.getNazwisko());
+                System.out.println("Stanowisko: Handlowiec");
+                System.out.println("Wyangordzenie: " + obj.getWynagrodzenie());
+                System.out.println("Numer telefonu: " + obj.getNumerTelefonu());
+                System.out.println("Prowizja %: " + obj.getProwizja());
+                System.out.println("Limit prowizji/miesiac: " + obj.getLimitProwizji());
+            }catch(Exception e){
+                System.err.println("Błąd odczytu danych");
+            }
             System.out.println("------------------------------------------------");
         }else{
             System.out.println("Blad w odczycie pracownika");
