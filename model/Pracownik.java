@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class Pracownik implements Serializable {
-    private static long serialVersionUID;
     private String Pesel;
     private String Imie;
     private String Nazwisko;
@@ -32,19 +31,13 @@ public class Pracownik implements Serializable {
             int msc = Integer.parseInt(in.substring(2,4));
             msc %= 20;
             if (msc > 12) throw new NumberFormatException("Wrong Pesel Format");
+            int day = Integer.parseInt(in.substring(4,6));
+            if (day > 31) throw new NumberFormatException("Wrong Pesel Format");
         }
         catch (NumberFormatException nfe) {
             throw new NumberFormatException("Wrong Pesel Format");
         }
         Pesel = in;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public static void setSerialVersionUID(long serialVersionUID) {
-        Pracownik.serialVersionUID = serialVersionUID;
     }
 
     public String getPesel() {
@@ -81,7 +74,7 @@ public class Pracownik implements Serializable {
 
     public void setNumerTelefonu(String numerTelefonu) {
         try{
-            int pom = Integer.parseInt(numerTelefonu);
+            long pom = Long.parseLong(numerTelefonu);
         }catch(NumberFormatException nfe) {
             throw new NumberFormatException("Wrong Telephon Number Format");
         }

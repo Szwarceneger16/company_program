@@ -1,19 +1,14 @@
 package szwarc.company_program.view;
 
-import static szwarc.company_program.controller.Operations.dodajPracownika;
-import static szwarc.company_program.controller.Operations.usunPracownika;
-import static szwarc.company_program.controller.Operations.znajdzPracownika;
-import static szwarc.company_program.controller.Operations.odczytBazyDanych;
-import static szwarc.company_program.controller.Operations.zapisBazyDanych;
+import szwarc.company_program.model.*;
 
-import szwarc.company_program.model.Dyrektor;
-import szwarc.company_program.model.Handlowiec;
-import szwarc.company_program.model.Pracownik;
-
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Scanner;
+
+import static szwarc.company_program.controller.Operations.*;
 
 public class Display {
     private static Locale locale = new Locale("Polish");
@@ -59,11 +54,11 @@ public class Display {
                         char select2 = scanner.next().charAt(0);
                         if (select2 == 'D' || select2 == 'd' || select2 == 'H' || select2 == 'h'){
                             if(select2 == 'D' || select2 == 'd'){
-                                obj = stworzDyrektora();
-                                //obj = new Dyrektor("99112304053", "abc", "def", new BigDecimal(34343), "3434343", new BigDecimal(34343), "4535345", new BigDecimal(34343));
+                                //obj = stworzDyrektora();
+                                obj = new Dyrektor("99112304053", "abc", "def", new BigDecimal(34343), "3434343", new BigDecimal(34343), "4535345", new BigDecimal(34343));
                             }else if(select2 == 'H' || select2 == 'h'){
-                                obj = stworzHandlowca();
-                                //obj = new Handlowiec("99032304053", "abcd", "dddef", new BigDecimal(34343), "3434343", new BigDecimal(34343), new BigDecimal(34343));
+                                //obj = stworzHandlowca();
+                                obj = new Handlowiec("99032304053", "abcd", "dddef", new BigDecimal(34343), "3434343", new BigDecimal(34343), new BigDecimal(34343));
                             }
                             if(obj != null){
                                 System.out.println("[E] Potwierdz , [Q] Anuluj");
