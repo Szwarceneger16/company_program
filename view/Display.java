@@ -1,6 +1,8 @@
 package szwarc.company_program.view;
 
-import szwarc.company_program.model.*;
+import szwarc.company_program.model.Dyrektor;
+import szwarc.company_program.model.Handlowiec;
+import szwarc.company_program.model.Pracownik;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -127,6 +129,18 @@ public class Display {
                             break;
                         }
                     }
+                    break;
+                case 5:
+                    System.out.print("Podaj nazwe pliku wraz z roszerzeniem: ");
+                    //String path = new File(".").getCanonicalPath();
+                    String fileName = scanner.next();
+                    zapisPracownikow(bazaDanych,fileName);
+                    break;
+                case 6:
+                    System.out.print("Podaj nazwe pliku wraz z roszerzeniem: ");
+                    //String path = new File(".").getCanonicalPath();
+                    String fileName2 = scanner.next();
+                    bazaDanych = odczytPracownikow(fileName2);
                     break;
                 default:
                     break;

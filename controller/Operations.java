@@ -2,9 +2,60 @@ package szwarc.company_program.controller;
 
 import szwarc.company_program.model.Pracownik;
 
-import java.util.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.concurrent.*;
 import java.util.zip.*;
+
+class zapisPracownika implements Runnable {
+        Pracownik tmp;
+        String in;
+        zapisPracownika(Pracownik obj,String path){
+                this.tmp = obj;
+                this.in = path;
+        }
+        public void run() {
+                try {
+                        new File(in).getParentFile().mkdirs();
+                        FileOutputStream fos = new FileOutputStream(in);
+                        GZIPOutputStream gz = new GZIPOutputStream(fos);
+                        ObjectOutputStream oos = new ObjectOutputStream(gz);
+                        oos.writeObject(tmp);
+                        gz.close();
+                        fos.close();
+                }catch (CancellationException e){
+                        System.out.println("Watek zostal anulowany!");
+                }catch (CompletionException E) {
+                        System.out.println("Watek wyrzucil wyjatek!");
+                }catch (Exception e){
+                        return;
+                }
+        }
+}
+
+class odczytPracownika {
+//        static String in;
+//
+//        public odczytPracownika(String path) {
+//                this.in = path;
+//        }
+
+        public static Pracownik get(String in){
+                try{
+                FileInputStream fis = new FileInputStream( in );
+                GZIPInputStream gz = new GZIPInputStream(fis);
+                ObjectInputStream ois = new ObjectInputStream( gz );
+                Pracownik p = (Pracownik)ois.readObject();
+                fis.close();
+                gz.close();
+                return p;
+                }catch (Exception e){
+                        return null;
+                }
+        }
+}
 
 
 public class Operations {
@@ -76,6 +127,62 @@ public class Operations {
 
                 return true;
         }
+
+        public static boolean zapisPracownikow(HashMap<String, Pracownik> Container,String path){
+                int count = 0;
+                ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+                CompletableFuture<Void>[] cF = new CompletableFuture[Container.size()];
+
+                for (HashMap.Entry<String, Pracownik> el:Container.entrySet())
+                {
+                       cF[count] = CompletableFuture.runAsync(new zapisPracownika(el.getValue(),"dat\\"+path+count+".gzip"),pool);
+                       count++;
+                }
+                for (int k = 0; k<count;k++){
+
+                        cF[k].join();
+                        if(cF[k].isCompletedExceptionally()) {return false;};
+                }
+
+                return true;
+        }
+
+        public static HashMap<String, Pracownik> odczytPracownikow(String path){
+                int count = 0;
+                try{
+                        count = (int) Files.list(Paths.get("dat\\")).count();
+                }catch (Exception e){
+                        return null;
+                }
+                ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+                CompletableFuture<Pracownik>[] cF = new CompletableFuture[count];;
+
+                        for (int i = count; i > 0; i--) {
+                                try {
+                                        int finalCount = i;
+                                        cF[finalCount - 1] = CompletableFuture.supplyAsync(()->odczytPracownika.get("dat\\" + path + (finalCount - 1) + ".gzip"), pool);
+                                }catch (Exception e) {
+
+                                }
+                        }
+
+                HashMap<String, Pracownik> ret = new HashMap<>();
+                try {
+                        for (int i = count; i > 0; i--) {
+                                if (cF[i - 1].get() == null) { continue; }
+                                ret.put(cF[i - 1].get().getPesel(), cF[i - 1].get());
+                        }
+                }catch (CancellationException e){
+                        System.out.println("Watek zostal anulowany!");
+                }catch (CompletionException E) {
+                        System.out.println("Watek wyrzucil wyjatek!");
+                }catch (Exception e){
+                        return null;
+                }
+
+                return ret;
+        }
+
 
         public static HashMap<String, Pracownik> odczytBazyDanych( String in) throws IOException {
                 if(in.substring((in.length()-4)).equals(".zip") ) {
